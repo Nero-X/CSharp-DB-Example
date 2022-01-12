@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="reportsDataSet" targetNamespace="http://tempuri.org/reportsDataSet.xsd" xmlns:mstns="http://tempuri.org/reportsDataSet.xsd" xmlns="http://tempuri.org/reportsDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="service_centerConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="service_centerConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.BBD_lab1.Properties.Settings.GlobalReference.Default.service_centerConnectionString" Provider="MySql.Data.MySqlClient" />
+        </Connections>
+        <Tables>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="PartsRemainsTableAdapter" GeneratorDataComponentClassName="PartsRemainsTableAdapter" Name="PartsRemains" UserDataComponentName="PartsRemainsTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="service_centerConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT devices.Dev_model, repair_parts.Part_name, parts_warehouse.PartWH_count, parts_warehouse.PartWH_sum
+FROM     parts_warehouse INNER JOIN
+                  devices ON parts_warehouse.Dev_id = devices.Dev_id INNER JOIN
+                  repair_parts ON parts_warehouse.Part_id = repair_parts.Part_id</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="Dev_model" DataSetColumn="Dev_model" />
+              <Mapping SourceColumn="Part_name" DataSetColumn="Part_name" />
+              <Mapping SourceColumn="PartWH_count" DataSetColumn="PartWH_count" />
+              <Mapping SourceColumn="PartWH_sum" DataSetColumn="PartWH_sum" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CurrentOrdersTableAdapter" GeneratorDataComponentClassName="CurrentOrdersTableAdapter" Name="CurrentOrders" UserDataComponentName="CurrentOrdersTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="service_centerConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT DISTINCT employees.Empl_surname, employees.Empl_name, employees.Empl_second_name, orders.Ord_id, orders.Ord_datetime
+FROM     order_devices INNER JOIN
+                  orders ON order_devices.Ord_id = orders.Ord_id INNER JOIN
+                  employees ON orders.Empl_id = employees.Empl_id
+WHERE  (order_devices.OrdDev_fixed = 0)</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="Empl_surname" DataSetColumn="Empl_surname" />
+              <Mapping SourceColumn="Empl_name" DataSetColumn="Empl_name" />
+              <Mapping SourceColumn="Empl_second_name" DataSetColumn="Empl_second_name" />
+              <Mapping SourceColumn="Ord_id" DataSetColumn="Ord_id" />
+              <Mapping SourceColumn="Ord_datetime" DataSetColumn="Ord_datetime" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CompletedOrdersTableAdapter" GeneratorDataComponentClassName="CompletedOrdersTableAdapter" Name="CompletedOrders" UserDataComponentName="CompletedOrdersTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="service_centerConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT DISTINCT employees.Empl_surname, employees.Empl_name, employees.Empl_second_name, orders.Ord_id, orders.Ord_datetime, orders.Ord_sum
+FROM     orders INNER JOIN
+                  order_devices ON orders.Ord_id = order_devices.Ord_id INNER JOIN
+                  employees ON orders.Empl_id = employees.Empl_id
+WHERE  (order_devices.OrdDev_fixed = 1) AND (orders.Ord_datetime &gt;= @НачалоПериода) AND (orders.Ord_datetime &lt; @КонецПериода)</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="НачалоПериода" ColumnName="Ord_datetime" DataSourceName="service_center.orders" DataTypeServer="datetime" DbType="DateTime" Direction="Input" ParameterName="@НачалоПериода" Precision="0" ProviderType="DateTime" Scale="0" Size="0" SourceColumn="Ord_datetime" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="КонецПериода" ColumnName="Ord_datetime" DataSourceName="service_center.orders" DataTypeServer="datetime" DbType="DateTime" Direction="Input" ParameterName="@КонецПериода" Precision="0" ProviderType="DateTime" Scale="0" Size="0" SourceColumn="Ord_datetime" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="Empl_surname" DataSetColumn="Empl_surname" />
+              <Mapping SourceColumn="Empl_name" DataSetColumn="Empl_name" />
+              <Mapping SourceColumn="Empl_second_name" DataSetColumn="Empl_second_name" />
+              <Mapping SourceColumn="Ord_id" DataSetColumn="Ord_id" />
+              <Mapping SourceColumn="Ord_datetime" DataSetColumn="Ord_datetime" />
+              <Mapping SourceColumn="Ord_sum" DataSetColumn="Ord_sum" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+        </Tables>
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="reportsDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="True" msprop:Generator_DataSetName="reportsDataSet" msprop:Generator_UserDSName="reportsDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="PartsRemains" msprop:Generator_TableClassName="PartsRemainsDataTable" msprop:Generator_TableVarName="tablePartsRemains" msprop:Generator_TablePropName="PartsRemains" msprop:Generator_RowDeletingName="PartsRemainsRowDeleting" msprop:Generator_RowChangingName="PartsRemainsRowChanging" msprop:Generator_RowEvHandlerName="PartsRemainsRowChangeEventHandler" msprop:Generator_RowDeletedName="PartsRemainsRowDeleted" msprop:Generator_UserTableName="PartsRemains" msprop:Generator_RowChangedName="PartsRemainsRowChanged" msprop:Generator_RowEvArgName="PartsRemainsRowChangeEvent" msprop:Generator_RowClassName="PartsRemainsRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Dev_model" msprop:Generator_ColumnVarNameInTable="columnDev_model" msprop:Generator_ColumnPropNameInRow="Dev_model" msprop:Generator_ColumnPropNameInTable="Dev_modelColumn" msprop:Generator_UserColumnName="Dev_model">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="30" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Part_name" msprop:Generator_ColumnVarNameInTable="columnPart_name" msprop:Generator_ColumnPropNameInRow="Part_name" msprop:Generator_ColumnPropNameInTable="Part_nameColumn" msprop:Generator_UserColumnName="Part_name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="PartWH_count" msprop:Generator_ColumnVarNameInTable="columnPartWH_count" msprop:Generator_ColumnPropNameInRow="PartWH_count" msprop:Generator_ColumnPropNameInTable="PartWH_countColumn" msprop:Generator_UserColumnName="PartWH_count" type="xs:int" />
+              <xs:element name="PartWH_sum" msprop:Generator_ColumnVarNameInTable="columnPartWH_sum" msprop:Generator_ColumnPropNameInRow="PartWH_sum" msprop:Generator_ColumnPropNameInTable="PartWH_sumColumn" msprop:Generator_UserColumnName="PartWH_sum" type="xs:float" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="CurrentOrders" msprop:Generator_TableClassName="CurrentOrdersDataTable" msprop:Generator_TableVarName="tableCurrentOrders" msprop:Generator_TablePropName="CurrentOrders" msprop:Generator_RowDeletingName="CurrentOrdersRowDeleting" msprop:Generator_RowChangingName="CurrentOrdersRowChanging" msprop:Generator_RowEvHandlerName="CurrentOrdersRowChangeEventHandler" msprop:Generator_RowDeletedName="CurrentOrdersRowDeleted" msprop:Generator_UserTableName="CurrentOrders" msprop:Generator_RowChangedName="CurrentOrdersRowChanged" msprop:Generator_RowEvArgName="CurrentOrdersRowChangeEvent" msprop:Generator_RowClassName="CurrentOrdersRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Empl_surname" msprop:Generator_ColumnVarNameInTable="columnEmpl_surname" msprop:Generator_ColumnPropNameInRow="Empl_surname" msprop:Generator_ColumnPropNameInTable="Empl_surnameColumn" msprop:Generator_UserColumnName="Empl_surname">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="30" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Empl_name" msprop:Generator_ColumnVarNameInTable="columnEmpl_name" msprop:Generator_ColumnPropNameInRow="Empl_name" msprop:Generator_ColumnPropNameInTable="Empl_nameColumn" msprop:Generator_UserColumnName="Empl_name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="30" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Empl_second_name" msprop:Generator_ColumnVarNameInTable="columnEmpl_second_name" msprop:Generator_ColumnPropNameInRow="Empl_second_name" msprop:Generator_ColumnPropNameInTable="Empl_second_nameColumn" msprop:Generator_UserColumnName="Empl_second_name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="30" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Ord_id" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnOrd_id" msprop:Generator_ColumnPropNameInRow="Ord_id" msprop:Generator_ColumnPropNameInTable="Ord_idColumn" msprop:Generator_UserColumnName="Ord_id" type="xs:int" />
+              <xs:element name="Ord_datetime" msprop:Generator_ColumnVarNameInTable="columnOrd_datetime" msprop:Generator_ColumnPropNameInRow="Ord_datetime" msprop:Generator_ColumnPropNameInTable="Ord_datetimeColumn" msprop:Generator_UserColumnName="Ord_datetime" type="xs:dateTime" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="CompletedOrders" msprop:Generator_TableClassName="CompletedOrdersDataTable" msprop:Generator_TableVarName="tableCompletedOrders" msprop:Generator_TablePropName="CompletedOrders" msprop:Generator_RowDeletingName="CompletedOrdersRowDeleting" msprop:Generator_RowChangingName="CompletedOrdersRowChanging" msprop:Generator_RowEvHandlerName="CompletedOrdersRowChangeEventHandler" msprop:Generator_RowDeletedName="CompletedOrdersRowDeleted" msprop:Generator_UserTableName="CompletedOrders" msprop:Generator_RowChangedName="CompletedOrdersRowChanged" msprop:Generator_RowEvArgName="CompletedOrdersRowChangeEvent" msprop:Generator_RowClassName="CompletedOrdersRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Empl_surname" msprop:Generator_ColumnVarNameInTable="columnEmpl_surname" msprop:Generator_ColumnPropNameInRow="Empl_surname" msprop:Generator_ColumnPropNameInTable="Empl_surnameColumn" msprop:Generator_UserColumnName="Empl_surname">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="30" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Empl_name" msprop:Generator_ColumnVarNameInTable="columnEmpl_name" msprop:Generator_ColumnPropNameInRow="Empl_name" msprop:Generator_ColumnPropNameInTable="Empl_nameColumn" msprop:Generator_UserColumnName="Empl_name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="30" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Empl_second_name" msprop:Generator_ColumnVarNameInTable="columnEmpl_second_name" msprop:Generator_ColumnPropNameInRow="Empl_second_name" msprop:Generator_ColumnPropNameInTable="Empl_second_nameColumn" msprop:Generator_UserColumnName="Empl_second_name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="30" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Ord_id" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnOrd_id" msprop:Generator_ColumnPropNameInRow="Ord_id" msprop:Generator_ColumnPropNameInTable="Ord_idColumn" msprop:Generator_UserColumnName="Ord_id" type="xs:int" />
+              <xs:element name="Ord_datetime" msprop:Generator_ColumnVarNameInTable="columnOrd_datetime" msprop:Generator_ColumnPropNameInRow="Ord_datetime" msprop:Generator_ColumnPropNameInTable="Ord_datetimeColumn" msprop:Generator_UserColumnName="Ord_datetime" type="xs:dateTime" />
+              <xs:element name="Ord_sum" msprop:Generator_ColumnVarNameInTable="columnOrd_sum" msprop:Generator_ColumnPropNameInRow="Ord_sum" msprop:Generator_ColumnPropNameInTable="Ord_sumColumn" msprop:Generator_UserColumnName="Ord_sum" type="xs:float" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:CurrentOrders" />
+      <xs:field xpath="mstns:Ord_id" />
+    </xs:unique>
+    <xs:unique name="CompletedOrders_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:CompletedOrders" />
+      <xs:field xpath="mstns:Ord_id" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>
