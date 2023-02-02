@@ -76,7 +76,7 @@ namespace BBD_lab1
             bool or = false;
             for (int i = 0; i < dgv.RowCount - 1; i++)
             {
-                string expr = $"{dgv["col_field", i].Value}{dgv["col_op", i].Value}'{dgv["col_value", i].Value}'";
+                string expr = $"[{dgv["col_field", i].Value}]{dgv["col_op", i].Value}'{dgv["col_value", i].Value}'";
                 if (i != dgv.RowCount - 2)
                     if (dgv["col_field", i].Value == dgv["col_field", i + 1].Value && dgv["col_parentDT", i].Value != null)
                     {
@@ -164,16 +164,12 @@ namespace BBD_lab1
                 comboBoxCell.ReadOnly = false;
                 dgv["col_parentDT", e.RowIndex].Value = null;
                 dgv["col_findBtn", e.RowIndex].DataGridViewCellVisibility(false);
-                foreach (DataRelation relation in Dt.ParentRelations)
+                if (Utility.FindRelativeDataTable(Dt, colName) is DataTable parentDT)
                 {
-                    if (relation.ChildColumns.Contains(Dt.Columns[colName]))
-                    {
-                        dgv["col_findBtn", e.RowIndex].DataGridViewCellVisibility(true);
-                        dgv["col_parentDT", e.RowIndex].Value = relation.ParentTable.TableName;
-                        comboBoxCell.Value = "=";
-                        comboBoxCell.ReadOnly = true;
-                        break;
-                    }
+                    dgv["col_findBtn", e.RowIndex].DataGridViewCellVisibility(true);
+                    dgv["col_parentDT", e.RowIndex].Value = parentDT.TableName;
+                    comboBoxCell.Value = "=";
+                    comboBoxCell.ReadOnly = true;
                 }
             }
         }

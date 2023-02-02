@@ -97,7 +97,7 @@ namespace BBD_lab1
             {
                 Dock = DockStyle.Fill,
                 DataSource = bindingSource,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
             };
             dgv.DataError += Utility.DataGridView_SupressDataError;
             bindNav.Items.AddRange(new ToolStripItem[] { new ToolStripSeparator(), filterBtn, removeFilterBtn });
@@ -257,9 +257,7 @@ namespace BBD_lab1
         {
             try
             {
-                int recordsAffected;
-                ArrayList result;
-                if(MySqlDB.GetInstance(service_centerDataSet, ConnectionString).ExecuteQuery(query, out recordsAffected, out result))
+                if(MySqlDB.GetInstance(service_centerDataSet, ConnectionString).ExecuteQuery(query, out int recordsAffected, out ArrayList result))
                 {
                     if (recordsAffected >= 0) MessageBox.Show("Запрос выполнен успешно.\nКоличество затронутых записей: " + recordsAffected, name, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     else

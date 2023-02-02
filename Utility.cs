@@ -2,6 +2,7 @@
 using System;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace BBD_lab1
@@ -31,7 +32,7 @@ namespace BBD_lab1
             var x = e.CellBounds.Left + (e.CellBounds.Width - image.Width) / 2;
             var y = e.CellBounds.Top + (e.CellBounds.Height - image.Height) / 2;
 
-            e.Graphics.DrawImage(Properties.Resources.search, new Rectangle(x, y, image.Width, image.Height));
+            e.Graphics.DrawImage(image, new Rectangle(x, y, image.Width, image.Height));
             e.Handled = true;
         }
 
@@ -49,6 +50,15 @@ namespace BBD_lab1
         {
             // Данный обработчик необходим для подавления DataError, возникающего при закрытии формы из-за бага, связанного со свойством DataGridView.AutoSize
             // Подробнее: https://www.cyberforum.ru/windows-forms/thread1340064.html
+        }
+
+        public static DataTable FindRelativeDataTable(DataTable dataTable, string columnName)
+        {
+            foreach (DataRelation relation in dataTable.ParentRelations)
+            {
+                if (relation.ChildColumns.Contains(dataTable.Columns[columnName])) return relation.ParentTable;
+            }
+            return null;
         }
 
         public static void HandleOperation(this service_centerDataSet.order_devicesDataTable order_devices, MySqlCommand command, int ordId, int devId, int servId, int quantity, bool returning)

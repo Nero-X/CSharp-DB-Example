@@ -9,7 +9,7 @@ namespace BBD_lab1
     public partial class ParamsForm : Form
     {
         public Dictionary<string, object> ParamValues = new Dictionary<string, object>();
-        
+
         public ParamsForm(DataSet dataSet, List<SqlParam> sqlParams)
         {
             InitializeComponent();
@@ -46,16 +46,16 @@ namespace BBD_lab1
                         var column = table.Columns[param.Field];
                         if (column != null)
                         {
-                            if (column.DataType == typeof(DateTime)) 
-                            { 
+                            if (column.DataType == typeof(DateTime))
+                            {
                                 textBox_value = new DateTimePicker { Format = DateTimePickerFormat.Short };
-                                break; 
+                                break;
                             }
-                            else if (table.PrimaryKey.Contains(column))
+                            else if (Utility.FindRelativeDataTable(table, param.Field) is DataTable parentDT)
                             {
                                 btn_search.Click += (object _s, EventArgs _e) =>
                                 {
-                                    var referenceForm = new ReferenceForm(table);
+                                    var referenceForm = new ReferenceForm(parentDT);
                                     if (referenceForm.ShowDialog() == DialogResult.OK)
                                     {
                                         int value = referenceForm.SelectedValue;
